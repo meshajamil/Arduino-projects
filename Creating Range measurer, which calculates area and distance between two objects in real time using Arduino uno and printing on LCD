@@ -176,55 +176,6 @@ void loop() {
         }
       }
       break;
-    case 3:    // Angle measuring program
-      // Read the accelerometer data
-      Wire.beginTransmission(MPU);
-      Wire.write(0x3B); // Start with register 0x3B (ACCEL_XOUT_H)
-      Wire.endTransmission(false);
-      Wire.requestFrom(MPU, 6, true); // Read 6 registers total, each axis value is stored in 2 registers
-      AcX = Wire.read() << 8 | Wire.read(); // X-axis value
-      AcY = Wire.read() << 8 | Wire.read(); // Y-axis value
-      AcZ = Wire.read() << 8 | Wire.read(); // Z-axis value
-     
-      if ( axis == 0) {
-        // Calculating the Pitch angle (rotation around Y-axis)
-        angle = atan(-1 * AcX / sqrt(pow(AcY, 2) + pow(AcZ, 2))) * 180 / PI;
-        lcd.setCursor(0, 0);
-        lcd.print("Pitch");
-      }
-      else if (axis == 1) {
-        // Calculating the Roll angle (rotation around X-axis)
-        angle = atan(-1 * AcY / sqrt(pow(AcX, 2) + pow(AcZ, 2))) * 180 / PI;
-        lcd.setCursor(0, 0);
-        lcd.print("Roll ");
-      }
-      lcd.setCursor(0, 1);
-      lcd.print("Angle: ");
-      lcd.print(abs(angle));
-      lcd.print("     ");
-      lcd.setCursor(10, 1);
-      lcd.print("deg");
-      delay(200);
-      // Change axis
-      if (digitalRead(selectButton) == 0) {
-        if (axis == 0) {
-          axis = 1;
-          delay(100);
-        }
-        // Save distance 2
-        else if (axis == 1) {
-          axis = 0;
-          delay(100);
-        }
-        // If button is held longer then half sencond change program
-        delay(500);
-        if (digitalRead(selectButton) == 0) {
-          program = 0;
-          lcd.clear();
-          delay(500);
-        }
-      }
-      break;
   }
 }
 //===== getDistance - Custom Function
